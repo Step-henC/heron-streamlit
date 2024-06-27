@@ -34,6 +34,7 @@ if uploaded_file is not None:
 
       dictForDataframe["Peptide"] = proteinName
       dictForDataframe["Replicate"] = row["Replicate Name"]
+      
       if math.isnan(row["Total Area"]):
           
         dictForDataframe["Total Area"] = 0
@@ -56,10 +57,14 @@ if uploaded_file is not None:
 
     with pd.ExcelWriter(buffer, engine="xlsxwriter") as writer:
           for k, v in groupedSheetsByGalNac.items():
-              ddff = pd.DataFrame(v)
-              dfff = pd.pivot_table(ddff, index=["Peptide"], columns=["Replicate"], aggfunc="sum", fill_value=0)
+              dfRaw = pd.DataFrame(v)
+              dfPivot = pd.pivot_table(dfRaw, index=["Peptide"], values="Total Area", columns=["Replicate"], aggfunc="sum", fill_value=0, margins=True, margins_name="Sum")
+              max_rows = dfPivot.shape[0]
 
-              dfff.to_excel(writer, sheet_name=k)
+
+              dfPercentages = pd.pivot_table(dfRaw, index=["Peptide"], columns=["Replicate"], aggfunc=lambda x: sum(x), fill_value=0)
+              dfPivot.to_excel(writer, sheet_name=k)
+              dfPercentages.to_excel(writer, sheet_name=k, startrow=max_rows+5, startcol=0)
          
 
 
