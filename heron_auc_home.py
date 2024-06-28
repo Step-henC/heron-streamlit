@@ -1,12 +1,12 @@
 import pandas as pd
 import io
 import streamlit as st
-import plotly.express as px
 import re
-import numpy as np
 import math
 
-st.title('Heron with Streamlit')
+st.title('Heron Data with Streamlit')
+st.logo("https://www.herondata.app/static/media/heronLogo.f08c51755ccf14a6b90f.jpg", link="https://herondata.app", icon_image=None)
+
 
 st.link_button("Return to Heron Home", "https://herondata.app")
 
@@ -19,8 +19,10 @@ def parseSialicAcidFromString(proteinNameString):
 #upload file
 uploaded_file = st.file_uploader("Choose a CSV")
 if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
+
+    df = pd.read_csv(uploaded_file, encoding_errors="ignore")
     st.write(df)
+   
 
 # begin grouping proteins by galnac numbers
     listOfGalNacs = df.to_dict('records')
@@ -58,7 +60,7 @@ if uploaded_file is not None:
     with pd.ExcelWriter(buffer, engine="xlsxwriter") as writer:
           for k, v in groupedSheetsByGalNac.items():
               dfRaw = pd.DataFrame(v)
-              dfPivot = pd.pivot_table(dfRaw, index=["Peptide"], values="Total Area", columns=["Replicate"], aggfunc="sum", fill_value=0, margins=True, margins_name="Sum")
+              dfPivot = pd.pivot_table(dfRaw, index=["Peptide"], values="Total Area", columns=["Replicate"], aggfunc="sum", fill_value=0, margins=True, margins_name="Summed Total Area")
               max_rows = dfPivot.shape[0]
               max_cols = dfPivot.shape[1]
 
@@ -76,6 +78,9 @@ if uploaded_file is not None:
 
               worksheet = writer.sheets[k]
               workbook = writer.book
+
+              worksheet.write(max_rows+4, 0, "Percent Relative Abundance (area/total area for peaks considered * 100)")
+              worksheet.write(max_rows+max_rows+9,0, "Replicate Average % Relative Abundance")
 
               colValIterator = 1
               for series_name, _ in dfAvgOfPercentages.items():
@@ -98,6 +103,8 @@ if uploaded_file is not None:
             label="Download",
             data=buffer,
             file_name="single-sheet.xlsx",
-            mime="application/vnd.ms-excel"
+            mime="application/vnd.ms-excel",
         )
 
+
+st.image("https://www.herondata.app/static/media/heronLogo.f08c51755ccf14a6b90f.jpg", caption=None)
