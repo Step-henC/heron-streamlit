@@ -9,13 +9,6 @@ st.title('Heron Data with Streamlit')
 st.logo("https://www.herondata.app/static/media/heronLogo.f08c51755ccf14a6b90f.jpg", link="https://herondata.app", icon_image=None)
 
 
-# Add custom CSS to hide the GitHub icon
-hide_github_icon = """
-#GithubIcon {
-  visibility: hidden;
-}
-"""
-st.markdown(hide_github_icon, unsafe_allow_html=True)
 st.link_button("Return to Heron Home", "https://herondata.app")
 
 # create separate excel sheets based on galnac
