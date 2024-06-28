@@ -67,6 +67,7 @@ if uploaded_file is not None:
 
               dfAvgOfPercentages = dfPercentages.T.groupby(lambda x: re.split('_\\d$', x)[0]).mean().T
               dfAvgOfPercentagesRowStart = max_rows+max_rows+10
+              avgTableColCount = dfAvgOfPercentages.shape[1]
 
               dfPivot.to_excel(writer, sheet_name=k)
               dfPercentages.to_excel(writer, sheet_name=k, startrow=max_rows+5, startcol=0)
@@ -76,17 +77,19 @@ if uploaded_file is not None:
               worksheet = writer.sheets[k]
               workbook = writer.book
 
+              colValIterator = 1
+              for series_name, _ in dfAvgOfPercentages.items():
                   
-              chart = workbook.add_chart({'type': 'pie'})
+                chart = workbook.add_chart({'type': 'pie'})
 
-              chart.add_series({
-                  "name": "Name",
+                chart.add_series({
+                  "name": series_name,
                   "categories": [k, dfAvgOfPercentagesRowStart+1, 0, dfAvgOfPercentagesRowStart+max_rows-1, 0],
-                  "values": [k, dfAvgOfPercentagesRowStart+1, 1, dfAvgOfPercentagesRowStart+max_rows-1, 1],
+                  "values": [k, dfAvgOfPercentagesRowStart+1, colValIterator, dfAvgOfPercentagesRowStart+max_rows-1, colValIterator],
               })
 
-              worksheet.insert_chart("H1", chart)
-
+                worksheet.insert_chart("H"+str(colValIterator+5), chart)
+                colValIterator += 1
          
 
 
