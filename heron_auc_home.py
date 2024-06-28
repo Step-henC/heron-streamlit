@@ -66,11 +66,27 @@ if uploaded_file is not None:
               dfPercentages = pd.pivot_table(dfRaw, index=["Peptide"], values="Total Area", columns=["Replicate"], aggfunc="sum", fill_value=0).apply(lambda x: x*100/sum(x))
 
               dfAvgOfPercentages = dfPercentages.T.groupby(lambda x: re.split('_\\d$', x)[0]).mean().T
-
+              dfAvgOfPercentagesRowStart = max_rows+max_rows+10
 
               dfPivot.to_excel(writer, sheet_name=k)
               dfPercentages.to_excel(writer, sheet_name=k, startrow=max_rows+5, startcol=0)
               dfAvgOfPercentages.to_excel(writer, sheet_name=k, startrow=max_rows+max_rows+10)
+             
+
+              worksheet = writer.sheets[k]
+              workbook = writer.book
+
+                  
+              chart = workbook.add_chart({'type': 'pie'})
+
+              chart.add_series({
+                  "name": "Name",
+                  "categories": [k, dfAvgOfPercentagesRowStart+1, 0, dfAvgOfPercentagesRowStart+max_rows-1, 0],
+                  "values": [k, dfAvgOfPercentagesRowStart+1, 1, dfAvgOfPercentagesRowStart+max_rows-1, 1],
+              })
+
+              worksheet.insert_chart("H1", chart)
+
          
 
 
