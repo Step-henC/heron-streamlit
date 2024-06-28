@@ -60,11 +60,17 @@ if uploaded_file is not None:
               dfRaw = pd.DataFrame(v)
               dfPivot = pd.pivot_table(dfRaw, index=["Peptide"], values="Total Area", columns=["Replicate"], aggfunc="sum", fill_value=0, margins=True, margins_name="Sum")
               max_rows = dfPivot.shape[0]
+              max_cols = dfPivot.shape[1]
+
+              # cannot "apply" to dfpivot cuz marings Sum column washes out percentages
+              dfPercentages = pd.pivot_table(dfRaw, index=["Peptide"], values="Total Area", columns=["Replicate"], aggfunc="sum", fill_value=0).apply(lambda x: x*100/sum(x))
+
+              dfAvgOfPercentages = dfPercentages.T.groupby(lambda x: re.split('_\\d$', x)[0]).mean().T
 
 
-              dfPercentages = pd.pivot_table(dfRaw, index=["Peptide"], columns=["Replicate"], aggfunc=lambda x: sum(x), fill_value=0)
               dfPivot.to_excel(writer, sheet_name=k)
               dfPercentages.to_excel(writer, sheet_name=k, startrow=max_rows+5, startcol=0)
+              dfAvgOfPercentages.to_excel(writer, sheet_name=k, startrow=max_rows+max_rows+10)
          
 
 
