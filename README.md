@@ -10,6 +10,16 @@ Make sure you have python3 installed. Then, install [streamlit here](https://str
 # Additional Links
 This is sub-service of the `herondata.app` which can be found at this [github repo](https://github.com/Step-henC/heron-data-internet)
 
+# Demo
+
+Mock Data is not exciting to show divisions in pie charts. Nonetheless, here is an example of the service.
+
+
+
+https://github.com/Step-henC/heron-streamlit/assets/98792412/d2436182-ff97-403e-8657-5342ec9b47b9
+
+
+
 # Future Steps
 
 Eventually this code will be refactored into a Django project and launched on Vercel. Doing so will allow me to use Vercel as a reverse proxy and host this project (that will be a Django project) within a subdirectory of the home project at herondata.app. As oppose to two separate websites, as it is currently.
