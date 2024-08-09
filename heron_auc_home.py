@@ -5,7 +5,7 @@ import re
 import math
 import xlsxwriter
 
-st.title('Heron Data with Streamlit')
+st.title('Heron Glycopeptide AUC')
 
 st.logo("https://www.herondata.app/static/media/heronLogo.f08c51755ccf14a6b90f.jpg", link="https://herondata.app", icon_image=None)
 
@@ -82,7 +82,7 @@ if uploaded_file is not None:
               workbook = writer.book
 
               worksheet.write(max_rows+4, 0, "Percent Relative Abundance (area/total area for peaks considered * 100)")
-              worksheet.write(max_rows+max_rows+9,0, "Replicate Average % Relative Abundance")
+              worksheet.write(max_rows+max_rows+9,0, "Replicate Average Percent Relative Abundance")
 
               colValIterator = 1
               for series_name, _ in dfAvgOfPercentages.items():
